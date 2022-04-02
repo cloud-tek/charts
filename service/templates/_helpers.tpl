@@ -43,7 +43,7 @@ config.alpha.linkerd.io/proxy-wait-before-exit-seconds: "10"
 {{- end -}}
 
 {{/*
-    Create CFS labels
+    Create cloudtek labels
 */}}
 {{- define "metadata.labels.cloudtek" -}}
 ops.cloudtek.io/environment: {{ .Release.Namespace | quote -}}
