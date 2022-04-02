@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name | quote }}
   labels:
-    ops.cloudtek.io/app: {{ .Values.deployment.image.name | quote }}
+    ops.cloud-tek.io/app: {{ .Values.deployment.image.name | quote }}
     {{- include "metadata.labels.cloudtek" . | nindent 4 }}
     {{- if .Values.deployment.labels }}
     {{- .Values.deployment.labels | toYaml | nindent 4 }}
@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       labels:
-        ops.cloudtek.io/app: {{ .Values.deployment.image.name }}
+        ops.cloud-tek.io/app: {{ .Values.deployment.image.name }}
         {{- include "metadata.labels.cloudtek" . | nindent 8 }}
         {{- if .Values.deployment.labels }}
         {{- .Values.deployment.labels | toYaml | nindent 8 }}

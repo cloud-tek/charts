@@ -4,7 +4,7 @@ metadata:
     release: "12345-5"
     buildId: "12345"
     project: "ionizd"
-    organizationId: "cloudtek"
+    organization: "cloudtek"
     branch: "main"
     commit: "1f5e3a24d"
 

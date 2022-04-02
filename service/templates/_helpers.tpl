@@ -46,15 +46,15 @@ config.alpha.linkerd.io/proxy-wait-before-exit-seconds: "10"
     Create cloudtek labels
 */}}
 {{- define "metadata.labels.cloudtek" -}}
-ops.cloudtek.io/environment: {{ .Release.Namespace | quote -}}
+ops.cloud-tek.io/environment: {{ .Release.Namespace | quote -}}
 {{ if (.Values.metadata.cloudtek) }}
-ops.cloudtek.io/teamName: {{ .Values.metadata.cloudtek.teamName | quote }}
-ops.cloudtek.io/release: {{ .Values.metadata.cloudtek.release | quote }}
-ops.cloudtek.io/buildId: {{ .Values.metadata.cloudtek.buildId | quote }}
-ops.cloudtek.io/project: {{ .Values.metadata.cloudtek.project | quote }}
-ops.cloudtek.io/organizationId: {{ .Values.metadata.cloudtek.organizationId | quote }}
-ops.cloudtek.io/branch: {{ .Values.metadata.cloudtek.branch | quote }}
-ops.cloudtek.io/commit: {{ .Values.metadata.cloudtek.commit | quote }}
+ops.cloud-tek.io/teamName: {{ .Values.metadata.cloudtek.teamName | quote }}
+ops.cloud-tek.io/release: {{ .Release.Name | quote }}
+ops.cloud-tek.io/buildId: {{ .Values.metadata.cloudtek.buildId | quote }}
+ops.cloud-tek.io/project: {{ .Values.metadata.cloudtek.project | quote }}
+ops.cloud-tek.io/organization: {{ .Values.metadata.cloudtek.organization | quote }}
+ops.cloud-tek.io/branch: {{ .Values.metadata.cloudtek.branch | quote }}
+ops.cloud-tek.io/commit: {{ .Values.metadata.cloudtek.commit | quote }}
 {{- end -}}
 {{- end -}}
 
@@ -65,7 +65,7 @@ nodeAffinity:
   requiredDuringSchedulingIgnoredDuringExecution:
     nodeSelectorTerms:
     - matchExpressions:
-      - key: cloudtek.pl/nodepool
+      - key: cloud-tek.io/nodepool
         operator: In
         values:
         - main
