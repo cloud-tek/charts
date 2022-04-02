@@ -1,0 +1,29 @@
+{{- if and (.Values.deployment) (eq .Values.deployment.enabled true) -}}
+{{- if and (.Values.deployment.service) (eq .Values.deployment.service.enabled true) -}}
+{{- if and (.Values.deployment.ingress) (eq .Values.deployment.ingress.enabled true) -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name | quote }}
+  {{- if .Values.deployment.ingress.annotations }}
+  annotations:
+    {{- .Values.deployment.ingress.annotations | toYaml | nindent 4 }}
+  {{- end }}
+spec:
+  rules:
+  {{- if .Values.deployment.ingress.rules }}
+  {{- .Values.deployment.ingress.rules | toYaml | nindent 2 }}
+  {{- else  }}
+  - http:
+      paths:
+      - path: {{ printf "/%s(/|$)(.*)" .Release.Name }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Release.Name | quote }}
+            port:
+              number: 80
+    {{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}

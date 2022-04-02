@@ -1,0 +1,104 @@
+name: validate
+
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+  PLATFORM: linux-amd64
+  HELM_VERSION: v3.8.1
+  KUBECONFORM_VERSION: v0.4.13
+on:
+  push:
+    branches:
+      - main
+      - feature/*
+  pull_request:
+    types:
+    - opened
+    - reopened
+    - synchronize
+    - edited
+    - closed
+    branches:
+    - main
+    paths:
+      - ".github/workflows/validate.yml"
+      - "opa/**"
+      - "service/**"
+  workflow_dispatch:
+    # inputs:
+    #   environment:
+    #     description: 'Environment'
+    #     required: true
+    #     default: 'dev'
+
+jobs:
+  build:
+    name: validate
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+    - name: diag
+      run: |
+        echo $PATH
+      shell: bash
+    - name: install helm
+      run: |
+        wget https://get.helm.sh/helm-$HELM_VERSION-$PLATFORM.tar.gz \
+        && tar -xvzf helm-$HELM_VERSION-$PLATFORM.tar.gz \
+        && mv ./$PLATFORM/helm /usr/local/bin
+      shell: bash
+    - name: install kubeconform
+      run: |
+        wget https://github.com/yannh/kubeconform/releases/download/$KUBECONFORM_VERSION/kubeconform-$PLATFORM.tar.gz \
+        && tar -xvzf kubeconform-$PLATFORM.tar.gz \
+        && mv kubeconform /usr/local/bin
+      shell: bash
+    - name: helm lint
+      run: |
+        helm lint
+      shell: bash
+      working-directory: service
+    - name: helm template
+      run: |
+        helm template --values values.ci.yaml --output-dir output --debug test .
+      shell: bash
+      working-directory: service
+    - name: cat output/*.yaml
+      run: |
+        for file in $(find ./output -type f -iname '*.y*ml'); do
+          cat $file 
+        done
+      shell: bash
+      working-directory: service
+    - name: kubeconform output/*.yaml
+      run: |
+        for file in $(find ./output -type f -iname '*.y*ml'); do
+          kubeconform -verbose $file
+        done
+      shell: bash
+      working-directory: service
+    
+    # https://github.com/marketplace/actions/deploy-ghost-theme
+    # - name: diag
+    #   run: |
+    #     sudo apt install tree --yes
+    #     pwd
+    #     tree ${{ github.workspace }}/dist
+    #   shell: bash
+    # - name: Deploy Ghost Theme (dev)
+    #   if: (github.event_name != 'workflow_dispatch') || (github.event.inputs.environment == 'dev')
+    #   uses: TryGhost/action-deploy-theme@v1.4.0
+    #   with:
+    #     theme-name: reset-newsfeed
+    #     api-url: ${{ secrets.GHOST_DEV_ADMIN_API_URL }}
+    #     api-key: ${{ secrets.GHOST_DEV_ADMIN_API_SECRET }}
+    #     file: dist/production-ghost-newsfeed.zip
+    # - name: Deploy Ghost Theme (xyz)
+    #   if: (github.event_name == 'workflow_dispatch') && (github.event.inputs.environment == 'xyz')
+    #   uses: TryGhost/action-deploy-theme@v1.4.0
+    #   with:
+    #     theme-name: reset-newsfeed
+    #     api-url: ${{ secrets.GHOST_XYZ_ADMIN_API_URL }}
+    #     api-key: ${{ secrets.GHOST_XYZ_ADMIN_API_SECRET }}
+    #     file: dist/production-ghost-newsfeed.zip

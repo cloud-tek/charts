@@ -1,0 +1,40 @@
+{{- if and (.Values.job) (eq .Values.job.enabled true) -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name | quote }}
+spec:
+  schedule: {{ required "job.schedule is required" .Values.job.schedule | quote }}
+  successfulJobsHistoryLimit: {{ required "job.limits.successful is required" .Values.job.limits.successful }}
+  failedJobsHistoryLimit: {{ required "job.limits.failed is required" .Values.job.limits.failed }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: {{ required "job.image.name is required " .Values.job.image.name | quote }}
+            image: acr0finall0dockers.azurecr.io/vabank/curl:7.78.0
+            args:
+            {{- required "job.args is required" .Values.job.args | toYaml | nindent 12 }}
+            resources:
+            {{- required "job.resources is required" .Values.job.resources | toYaml | nindent 14 }}
+          affinity:
+            nodeAffinity:
+              {{- .Values.deployment.settings.affinity.nodeAffinity | toYaml | nindent 14 }}
+            podAntiAffinity:
+            {{- if .Values.deployment.settings.affinity.podAntiAffinity }}
+              {{- .Values.deployment.settings.affinity.podAntiAffinity | toYaml | nindent 14 }}
+            {{- else }}
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                      - {{ .Release.Name }}
+                  topologyKey: kubernetes.io/hostname
+            {{- end }}
+{{- end -}}

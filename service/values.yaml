@@ -1,0 +1,119 @@
+metadata:
+  # cloudtek:
+  #   teamName: "devops"
+  #   release: "12345-5"
+  #   buildId: "12345"
+  #   project: "VAbank"
+  #   organizationId: "AllegroTechies"
+  #   branch: "main"
+  #   commit: "1f5e3a24d"
+
+  prometheus:
+    enabled: true
+  linkerd:
+    enabled: true
+
+deployment:
+  enabled: true
+  # labels:
+  #   test-label1: "1"
+  #   test-label2: "2"
+  # annotations:
+  #   test-annotation1: "1"
+  #   test-annotation2: "2"
+    
+  image:
+    registry: 'cloudtek.azurecr.io'
+    name: 'service'
+    tag: 'latest'
+
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      memory: 256Mi
+      cpu: 100m
+
+  service:
+    enabled: true
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+
+  ingress:
+    enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # rules:
+    # - http:
+    #     paths:
+    #       - path: /<service-name>(/|$)(.*)
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #             name: "<service-name>"
+    #             port:
+    #               number: 80
+
+  # general deployment settings
+  settings:
+    replicas: 2
+    envFrom:
+      configMapRefs:
+      - finai-config
+      secretRefs:
+      - secret-appinsights
+    # Pod Affinity
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+          # If you specify multiple nodeSelectorTerms associated with nodeAffinity types, 
+          # then the pod can be scheduled onto a node if one of the nodeSelectorTerms can be satisfied.
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: cloudtek.pl/nodepool
+              operator: In
+              values:
+              - main
+
+      # podAntiAffinity:
+      #   preferredDuringSchedulingIgnoredDuringExecution:
+      #   - weight: 100
+      #     podAffinityTerm:
+      #       labelSelector:
+      #         matchExpressions:
+      #         - key: app
+      #           operator: In
+      #           values:
+      #           - "_{ApplicationName}_"
+      #       topologyKey: kubernetes.io/hostname
+
+    dnsConfig:
+      options:
+        - name: single-request-reopen
+
+job:
+  enabled: true
+  schedule: "0 6 * * *"
+
+  limits:
+    successful: 1
+    failed: 1
+
+  image:
+    registry: 'cloudtek.azurecr.io'
+    name: 'job'
+    tag: 'latest'
+
+  args:
+  - curl
+  - -f
+  - https://tinyurl.org
+
+  resources:
+    limits:
+      memory: 32Mi
+    requests:
+      cpu: 100m
+      memory: 32Mi

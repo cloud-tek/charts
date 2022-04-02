@@ -1,0 +1,16 @@
+{{- if and (.Values.deployment) (eq .Values.deployment.enabled true) -}}
+{{- if and (.Values.deployment.service) (eq .Values.deployment.service.enabled true) -}}
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name | quote }}
+spec:
+  selector:
+    app: {{ .Release.Name | quote }}
+  ports:
+    - protocol: TCP
+      port: {{ required "deployment.service.port is required" .Values.deployment.service.port }}
+      targetPort: {{ required "deployment.service.targetPort is required" .Values.deployment.service.targetPort }}
+  type: ClusterIP
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,99 @@
+{{- if and (.Values.deployment) (eq .Values.deployment.enabled true) -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name | quote }}
+  labels:
+    ops.cloudtek.io/app: {{ .Values.deployment.image.name | quote }}
+    {{- include "metadata.labels.cloudtek" . | nindent 4 }}
+    {{- if .Values.deployment.labels }}
+    {{- .Values.deployment.labels | toYaml | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "metadata.annotations.prometheus" . | nindent 4 }}
+    {{- include "metadata.annotations.linkerd" . | nindent 4 }}
+    {{- if .Values.deployment.annotations }}
+    {{- .Values.deployment.annotations | toYaml | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ required "A valid deployment.settings.replicas is required" .Values.deployment.settings.replicas }}
+  minReadySeconds: 0
+  selector:
+    matchLabels:
+      app: {{ .Release.Name | quote }}
+  template:
+    metadata:
+      labels:
+        ops.cloudtek.io/app: {{ .Values.deployment.image.name }}
+        {{- include "metadata.labels.cloudtek" . | nindent 8 }}
+        {{- if .Values.deployment.labels }}
+        {{- .Values.deployment.labels | toYaml | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- include "metadata.annotations.prometheus" . | nindent 8 }}
+        {{- include "metadata.annotations.linkerd" . | nindent 8 }}
+        {{- if .Values.deployment.annotations }}
+        {{- .Values.deployment.annotations | toYaml | nindent 8 }}
+        {{- end }}
+    spec:
+      affinity:
+        nodeAffinity:
+          {{- .Values.deployment.settings.affinity.nodeAffinity | toYaml | nindent 10 }}
+        podAntiAffinity:
+        {{- if .Values.deployment.settings.affinity.podAntiAffinity }}
+          {{- .Values.deployment.settings.affinity.podAntiAffinity | toYaml | nindent 10 }}
+        {{- else }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}
+              topologyKey: kubernetes.io/hostname
+        {{- end }}
+      dnsConfig:
+        {{- .Values.deployment.settings.dnsConfig | toYaml | nindent 8 }}
+      containers:
+      - name: {{ required "deployment.image.name is required" .Values.deployment.image.name | quote }}
+        image: "_{image}_"
+        {{- include "spec.containers.lifecycle.prestop" . | nindent 8 }}
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        resources: 
+        {{- required "deployment.resources is required" .Values.deployment.resources | toYaml | nindent 10 }}
+        # Probes
+        {{- include "spec.containers.startupProbe" . | nindent 8 }}
+        {{- include "spec.containers.livenessProbe" . | nindent 8 }}
+        {{- include "spec.containers.readinessProbe" . | nindent 8 }}
+        # Env
+        env:
+        {{- include "spec.containers.env.k8s" . | nindent 8 }}
+        {{- include "spec.containers.env.app" . | nindent 8 }}
+        {{- include "spec.containers.env.gc" . | nindent 8 }}
+        {{- include "spec.containers.env.azure.keyvault" . | nindent 8 }}
+        # EnvFrom
+        envFrom:
+        {{- if or (.Values.deployment.settings.envFrom.configMapRefs) (.Values.deployment.settings.envFrom.secretRefs) }}
+        {{- range $i, $configMap := .Values.deployment.settings.envFrom.configMapRefs }}
+        - configMapRef:
+            name: {{ $configMap }}
+        {{- end -}}
+        {{- range $i, $secret := .Values.deployment.settings.envFrom.secretRefs }}
+        - secretRef:
+            name: {{ $secret }}
+        {{- end -}} 
+        {{- else }}
+        []
+        {{- end }}
+        # VolumeMount(s)
+        volumeMounts:
+        {{- include "volumeMounts.cloudtek-local-pemstore" . | nindent 8 }}
+      # Volumes
+      volumes:
+      {{- include "volumes.cloudtek-local-pemstore" . | nindent 6 }}
+{{- end -}}
