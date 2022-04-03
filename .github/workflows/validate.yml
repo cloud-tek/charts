@@ -90,7 +90,6 @@ jobs:
           kubeconform -verbose $file
         done
       shell: bash
-      working-directory: service
 
   opa:
     name: opa
@@ -110,7 +109,6 @@ jobs:
       run: |
         opa --help
       shell: bash
-      working-directory: service
 
 
     # https://github.com/marketplace/actions/deploy-ghost-theme
