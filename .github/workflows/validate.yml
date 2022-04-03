@@ -79,11 +79,6 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: manifests
-    - name: diag
-      run: |
-        sudo apt install tree
-        tree .
-      shell: bash
     - name: install kubeconform
       run: |
         wget https://github.com/yannh/kubeconform/releases/download/$KUBECONFORM_VERSION/kubeconform-$PLATFORM.tar.gz \
@@ -91,7 +86,7 @@ jobs:
         && mv kubeconform /usr/local/bin
     - name: kubeconform output/*.yaml
       run: |
-        for file in $(find ./output -type f -iname '*.y*ml'); do
+        for file in $(find ./ -type f -iname '*.y*ml'); do
           kubeconform -verbose $file
         done
       shell: bash
@@ -102,6 +97,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: template
     steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: manifests
     - name: install opa
       run: |
         wget https://openpolicyagent.org/downloads/$OPA_VERSION/opa_linux_amd64_static \
