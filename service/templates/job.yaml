@@ -1,4 +1,5 @@
-{{- if and (.Values.job) (eq .Values.job.enabled true) -}}
+{{- if .Values.job -}}
+{{- if eq .Values.job.enabled true -}}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -14,7 +15,7 @@ spec:
           restartPolicy: Never
           containers:
           - name: {{ required "job.image.name is required " .Values.job.image.name | quote }}
-            image: acr0finall0dockers.azurecr.io/vabank/curl:7.78.0
+            {{- include "spec.containers.deployment.image" . | nindent 12 }}
             args:
             {{- required "job.args is required" .Values.job.args | toYaml | nindent 12 }}
             resources:
@@ -37,4 +38,5 @@ spec:
                       - {{ .Release.Name }}
                   topologyKey: kubernetes.io/hostname
             {{- end }}
+{{- end -}}
 {{- end -}}

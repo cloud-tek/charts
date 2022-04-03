@@ -58,13 +58,13 @@ spec:
         {{- .Values.deployment.settings.dnsConfig | toYaml | nindent 8 }}
       containers:
       - name: {{ required "deployment.image.name is required" .Values.deployment.image.name | quote }}
-        image: "_{image}_"
+        {{- include "spec.containers.deployment.image" . | nindent 8 }}
         {{- include "spec.containers.lifecycle.prestop" . | nindent 8 }}
         ports:
         - containerPort: 80
           name: http
           protocol: TCP
-        resources: 
+        resources:
         {{- required "deployment.resources is required" .Values.deployment.resources | toYaml | nindent 10 }}
         # Probes
         {{- include "spec.containers.startupProbe" . | nindent 8 }}
@@ -86,7 +86,7 @@ spec:
         {{- range $i, $secret := .Values.deployment.settings.envFrom.secretRefs }}
         - secretRef:
             name: {{ $secret }}
-        {{- end -}} 
+        {{- end -}}
         {{- else }}
         []
         {{- end }}

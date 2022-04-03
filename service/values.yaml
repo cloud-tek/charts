@@ -13,6 +13,11 @@ metadata:
   linkerd:
     enabled: true
 
+common:
+  image:
+    registry: 'cloud-tek.azurecr.io'
+    imagePullPolicy: IfNotPresent
+
 deployment:
   enabled: true
   # labels:
@@ -23,7 +28,7 @@ deployment:
   #   test-annotation2: "2"
 
   image:
-    registry: 'cloudtek.azurecr.io'
+    repository: 'repository'
     name: 'service'
     tag: 'latest'
 
@@ -72,7 +77,7 @@ deployment:
           # then the pod can be scheduled onto a node if one of the nodeSelectorTerms can be satisfied.
           nodeSelectorTerms:
           - matchExpressions:
-            - key: cloudtek.pl/nodepool
+            - key: cloud-tek.io/nodepool
               operator: In
               values:
               - main
@@ -93,27 +98,27 @@ deployment:
       options:
         - name: single-request-reopen
 
-job:
-  enabled: true
-  schedule: "0 6 * * *"
+# job:
+#   enabled: true
+#   schedule: "0 6 * * *"
 
-  limits:
-    successful: 1
-    failed: 1
+#   limits:
+#     successful: 1
+#     failed: 1
 
-  image:
-    registry: 'cloudtek.azurecr.io'
-    name: 'job'
-    tag: 'latest'
+#   image:
+#     registry: 'cloudtek.azurecr.io'
+#     name: 'job'
+#     tag: 'latest'
 
-  args:
-  - curl
-  - -f
-  - https://tinyurl.org
+#   args:
+#   - curl
+#   - -f
+#   - https://tinyurl.org
 
-  resources:
-    limits:
-      memory: 32Mi
-    requests:
-      cpu: 100m
-      memory: 32Mi
+#   resources:
+#     limits:
+#       memory: 32Mi
+#     requests:
+#       cpu: 100m
+#       memory: 32Mi
