@@ -5,6 +5,7 @@ env:
   PLATFORM: linux-amd64
   HELM_VERSION: v3.8.1
   KUBECONFORM_VERSION: v0.4.13
+  OPA_VERSION: v0.39.0
 on:
   push:
     branches:
@@ -53,6 +54,10 @@ jobs:
         wget https://github.com/yannh/kubeconform/releases/download/$KUBECONFORM_VERSION/kubeconform-$PLATFORM.tar.gz \
         && tar -xvzf kubeconform-$PLATFORM.tar.gz \
         && mv kubeconform /usr/local/bin
+    - name: install opa
+      run: |
+        wget https://openpolicyagent.org/downloads/$OPA_VERSION/opa_linux_amd64_static \
+        && mv opa_linux_amd64_static /usr/local/bin/opa
       shell: bash
     - name: helm lint
       run: |
@@ -76,6 +81,11 @@ jobs:
         for file in $(find ./output -type f -iname '*.y*ml'); do
           kubeconform -verbose $file
         done
+      shell: bash
+      working-directory: service
+    - name: opa test
+      run: |
+        opa --help
       shell: bash
       working-directory: service
     
