@@ -1,0 +1,12 @@
+{
+	"recommendations": [
+		"tsandall.opa",
+		"ms-kubernetes-tools.vscode-kubernetes-tools",
+		"vscode-icons-team.vscode-icons",
+    "editorconfig.editorcon",
+    "esbenp.prettier-vscode"
+	],
+	"unwantedRecommendations": [
+
+	]
+}
