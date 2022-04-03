@@ -57,7 +57,8 @@ jobs:
     - name: install opa
       run: |
         wget https://openpolicyagent.org/downloads/$OPA_VERSION/opa_linux_amd64_static \
-        && mv opa_linux_amd64_static /usr/local/bin/opa
+        && mv opa_linux_amd64_static /usr/local/bin/opa \
+        && chmod +x /usr/local/bin/opa
       shell: bash
     - name: helm lint
       run: |
