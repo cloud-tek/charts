@@ -33,7 +33,7 @@ on:
 
 jobs:
   template:
-    name: template
+    name: helm template
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -70,6 +70,10 @@ jobs:
       with:
         name: manifests
         path: ${{ github.workspace }}/service/output/microservice/templates
+    - uses: actions/upload-artifact@v2
+      with:
+        name: opa
+        path: ${{ github.workspace }}/opa
 
   kubeconform:
     name: kubeconform
@@ -99,15 +103,20 @@ jobs:
     - uses: actions/download-artifact@v2
       with:
         name: manifests
+    - uses: actions/download-artifact@v2
+      with:
+        name: opa
+        path: opa
     - name: install opa
       run: |
         wget https://openpolicyagent.org/downloads/$OPA_VERSION/opa_linux_amd64_static \
         && mv opa_linux_amd64_static /usr/local/bin/opa \
         && chmod +x /usr/local/bin/opa
       shell: bash
-    - name: opa test
+    - name: opa eval
       run: |
-        opa --help
+        opa eval --input ./deployment.yaml --data ./opa/deployment.resources.rego "data.k8s_resources.allow"
+        opa eval --input ./job.yaml --data ./opa/job.resources.rego "data.k8s_resources.allow"
       shell: bash
 
 
