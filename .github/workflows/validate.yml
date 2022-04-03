@@ -81,7 +81,7 @@ jobs:
         name: manifests
     - name: diag
       run: |
-        apt get install tree
+        apt install tree
         tree .
       shell: bash
     - name: install kubeconform
