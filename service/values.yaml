@@ -1,5 +1,5 @@
 metadata:
-  # cloudtek:
+  # cloud-tek:
   #   teamName: "devops"
   #   release: "12345-5"
   #   buildId: "12345"
@@ -21,7 +21,7 @@ deployment:
   # annotations:
   #   test-annotation1: "1"
   #   test-annotation2: "2"
-    
+
   image:
     registry: 'cloudtek.azurecr.io'
     name: 'service'
@@ -68,7 +68,7 @@ deployment:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
           # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
-          # If you specify multiple nodeSelectorTerms associated with nodeAffinity types, 
+          # If you specify multiple nodeSelectorTerms associated with nodeAffinity types,
           # then the pod can be scheduled onto a node if one of the nodeSelectorTerms can be satisfied.
           nodeSelectorTerms:
           - matchExpressions:

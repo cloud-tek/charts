@@ -32,8 +32,8 @@ on:
     #     default: 'dev'
 
 jobs:
-  build:
-    name: validate
+  template:
+    name: template
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -49,17 +49,6 @@ jobs:
         && tar -xvzf helm-$HELM_VERSION-$PLATFORM.tar.gz \
         && mv ./$PLATFORM/helm /usr/local/bin
       shell: bash
-    - name: install kubeconform
-      run: |
-        wget https://github.com/yannh/kubeconform/releases/download/$KUBECONFORM_VERSION/kubeconform-$PLATFORM.tar.gz \
-        && tar -xvzf kubeconform-$PLATFORM.tar.gz \
-        && mv kubeconform /usr/local/bin
-    - name: install opa
-      run: |
-        wget https://openpolicyagent.org/downloads/$OPA_VERSION/opa_linux_amd64_static \
-        && mv opa_linux_amd64_static /usr/local/bin/opa \
-        && chmod +x /usr/local/bin/opa
-      shell: bash
     - name: helm lint
       run: |
         helm lint
@@ -73,10 +62,33 @@ jobs:
     - name: cat output/*.yaml
       run: |
         for file in $(find ./output -type f -iname '*.y*ml'); do
-          cat $file 
+          cat $file
         done
       shell: bash
       working-directory: service
+    - uses: actions/upload-artifact@v2
+      with:
+        name: manifests
+        path: ${{ github.workspace }}/service/output/microservice/templates
+
+  kubeconform:
+    name: kubeconform
+    runs-on: ubuntu-latest
+    needs: template
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: manifests
+    - name: diag
+      run: |
+        apt get install tree
+        tree .
+      shell: bash
+    - name: install kubeconform
+      run: |
+        wget https://github.com/yannh/kubeconform/releases/download/$KUBECONFORM_VERSION/kubeconform-$PLATFORM.tar.gz \
+        && tar -xvzf kubeconform-$PLATFORM.tar.gz \
+        && mv kubeconform /usr/local/bin
     - name: kubeconform output/*.yaml
       run: |
         for file in $(find ./output -type f -iname '*.y*ml'); do
@@ -84,12 +96,25 @@ jobs:
         done
       shell: bash
       working-directory: service
+
+  opa:
+    name: opa
+    runs-on: ubuntu-latest
+    needs: template
+    steps:
+    - name: install opa
+      run: |
+        wget https://openpolicyagent.org/downloads/$OPA_VERSION/opa_linux_amd64_static \
+        && mv opa_linux_amd64_static /usr/local/bin/opa \
+        && chmod +x /usr/local/bin/opa
+      shell: bash
     - name: opa test
       run: |
         opa --help
       shell: bash
       working-directory: service
-    
+
+
     # https://github.com/marketplace/actions/deploy-ghost-theme
     # - name: diag
     #   run: |
