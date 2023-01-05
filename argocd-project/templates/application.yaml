@@ -1,9 +1,9 @@
 {{- if .Values.applications -}}
-{{- range $key, $application := .Values.applications -}}
+{{- range $name, $application := .Values.applications -}}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ $application.metadata.name }}
+  name: {{ $name }}
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
