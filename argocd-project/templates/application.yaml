@@ -1,3 +1,4 @@
+{{- if .Values.applications -}}
 {{- range $application := .Values.applications -}}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -29,4 +30,5 @@ spec:
 
   syncPolicy:
   {{ $application.syncPolicy | toYaml | nindent 4 }}
+{{- end -}}
 {{- end -}}
