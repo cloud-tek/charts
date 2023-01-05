@@ -35,12 +35,12 @@ jobs:
         && mv ./${{ inputs.platform }}/helm /usr/local/bin
       shell: bash
     - name: helm lint
+      shell: bash
+      working-directory: ${{ github.workspace }}/${{ matrix.chart.id }}
       run: |
         pwd
         ls -l
         helm lint
-      shell: bash
-      working-directory: ${{ github.workspace }}/${{ matrix.chart.id }}
     - name: helm template
       run: |
         helm template --values values.ci.yaml --output-dir output --debug test .
