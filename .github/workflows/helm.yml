@@ -38,9 +38,7 @@ jobs:
       shell: bash
       working-directory: ${{ github.workspace }}/${{ matrix.chart.id }}
       run: |
-        pwd
-        ls -l
-        helm lint --values values.ci.yaml
+        helm lint
     - name: helm template
       run: |
         helm template --values values.ci.yaml --output-dir output --debug test .
