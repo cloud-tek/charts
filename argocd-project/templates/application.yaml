@@ -1,5 +1,5 @@
 {{- if .Values.applications -}}
-{{- range $application := .Values.applications -}}
+{{- range$key, $application := .Values.applications -}}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
