@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        module: ${{ fromJson(inputs.charts) }}
+        chart: ${{ fromJson(inputs.charts) }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
