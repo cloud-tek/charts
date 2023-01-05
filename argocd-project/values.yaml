@@ -1,0 +1,68 @@
+project:
+  metadata:
+    name: my-project
+    # Finalizer that ensures that project is not deleted until it is not referenced by any application
+    finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  description: A cloud-tek/hive project
+  # Only allow manifests to deploy from the following git repos
+  sourceRepos:
+  - '*'
+  # Only permit applications to deploy to the guestbook namespace in the same cluster
+  destinations:
+  - namespace: default
+    server: https://kubernetes.default.svc
+
+  # Deny all cluster-scoped resources from being created, except for Namespace
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+
+  # Allow all namespaced-scoped resources to be created, except for ResourceQuota, LimitRange, NetworkPolicy
+  namespaceResourceBlacklist:
+  - group: ''
+    kind: ResourceQuota
+  - group: ''
+    kind: LimitRange
+  - group: ''
+    kind: NetworkPolicy
+
+  # Deny all namespaced-scoped resources from being created, except for Deployment and StatefulSet
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: ServiceAccount
+  - group: 'rbac.authorization.k8s.io'
+    kind: Role
+  - group: 'rbac.authorization.k8s.io'
+    kind: RoleBinding
+  - group: ''
+    kind: ConfigMap
+  - group: ''
+    kind: Secret
+  - group: 'apps'
+    kind: Deployment
+  - group: 'apps'
+    kind: StatefulSet
+  - group: 'batch'
+    kind: Job
+  - group: 'batch'
+    kind: CronJob
+  - group: 'apps'
+    kind: DaemonSet
+  - group: ''
+    kind: Service
+  - group: 'networking.k8s.io'
+    kind: 'Ingress'
+  - group: 'policy'
+    kind: PodDisruptionBudget
+  - group: ''
+    kind: PersistentVolumeClaim
+
+  # roles:
+  # # A role which provides read-only access to all applications in the project
+  # - name: read-only
+  #   description: Read-only privileges to my-project
+  #   policies:
+  #   - p, proj:my-project:read-only, applications, get, my-project/*, allow
+  #   groups:
+  #   - my-oidc-group
