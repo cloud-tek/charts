@@ -18,5 +18,7 @@ spec:
   namespaceResourceWhitelist:
   {{- required ".Values.project.namespaceResourceWhitelist is required" .Values.project.namespaceResourceWhitelist | toYaml | nindent 2 }}
 
+  {{ if .Values.project.roles }}
   roles:
-  {{- required ".Values.project.roles is required" .Values.project.roles | toYaml | nindent 2 }}
+  {{- .Values.project.roles | toYaml | nindent 2 }}
+  {{- end -}}
