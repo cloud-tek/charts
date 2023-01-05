@@ -10,22 +10,22 @@ on:
     - feature/*
     - release/*
     paths:
-      - ".github/workflows/**"
-      - "scripts/**"
-      - "src/**"
-      - "tests/**"
-      - "GitVersion.yml"
+    - ".github/workflows/**"
+    - "opa/**"
+    - "service/**"
+    - "argocd-project/**"
+    - "README.md"
   pull_request:
     types:
     - closed
     branches:
     - main
     paths:
-      - ".github/workflows/**"
-      - "opa/**"
-      - "service/**"
-      - "argocd-project/**"
-      - "README.md"
+    - ".github/workflows/**"
+    - "opa/**"
+    - "service/**"
+    - "argocd-project/**"
+    - "README.md"
 
   workflow_dispatch:
     inputs: {}
