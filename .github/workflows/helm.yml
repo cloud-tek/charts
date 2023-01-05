@@ -38,16 +38,16 @@ jobs:
       run: |
         helm lint
       shell: bash
-      working-directory: ${{ matrix.chart.id }}
+      working-directory: ${{ github.workspace }}/${{ matrix.chart.id }}
     - name: helm template
       run: |
         helm template --values values.ci.yaml --output-dir output --debug test .
       shell: bash
-      working-directory: ${{ matrix.chart.id }}
+      working-directory: ${{ github.workspace }}/${{ matrix.chart.id }}
     - name: cat output/*.yaml
       run: |
         for file in $(find ./output -type f -iname '*.y*ml'); do
           cat $file
         done
       shell: bash
-      working-directory: ${{ matrix.chart.id }}
+      working-directory: ${{ github.workspace }}/${{ matrix.chart.id }}

@@ -1,5 +1,5 @@
 apiVersion: v2
-name: argocd
+name: argocd-project
 description: HELM chart containing an ArgoCD project containing HIVE microservices
 type: application
 version: 0.1.0
