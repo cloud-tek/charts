@@ -1,0 +1,67 @@
+name: ci
+
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
+on:
+  push:
+    branches:
+    - main
+    - feature/*
+    - release/*
+    paths:
+      - ".github/workflows/**"
+      - "scripts/**"
+      - "src/**"
+      - "tests/**"
+      - "GitVersion.yml"
+  pull_request:
+    types:
+    - closed
+    branches:
+    - main
+    paths:
+      - ".github/workflows/**"
+      - "opa/**"
+      - "service/**"
+      - "argocd-project/**"
+      - "README.md"
+
+  workflow_dispatch:
+    inputs: {}
+
+jobs:
+  helm:
+    uses: ./.github/workflows/helm.yml
+    with:
+      charts: |
+        [
+          {
+            "id": "service"
+          },
+          {
+            "id": "argocd-project"
+          }
+        ]
+  kubeconform:
+    uses: ./.github/workflows/kubeconform.yml
+    needs:
+    - helm
+    with:
+      charts: |
+        [
+          {
+            "id": "service"
+          }
+        ]
+  opa:
+    uses: ./.github/workflows/opa.yml
+    needs:
+    - helm
+    with:
+      charts: |
+        [
+          {
+            "id": "service"
+          }
+        ]

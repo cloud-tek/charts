@@ -1,0 +1,52 @@
+name: "helm"
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: "tool version"
+        type: string
+        required: true
+      platform:
+        description: "tool platform"
+        type: string
+        required: true
+      charts:
+        description: "list of charts to lint"
+        type: string
+        required: true
+
+jobs:
+  helm:
+    name: helm
+    strategy:
+      fail-fast: false
+      matrix:
+        module: ${{ fromJson(inputs.modules) }}
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: "0"
+    - name: install helm
+      run: |
+        wget https://get.helm.sh/helm-${{ inputs.version }}-${{ inputs.platform }}.tar.gz \
+        && tar -xvzf helm-${{ inputs.version }}-${{ inputs.platform }}.tar.gz \
+        && mv ./${{ inputs.platform }}/helm /usr/local/bin
+      shell: bash
+    - name: helm lint
+      run: |
+        helm lint
+      shell: bash
+      working-directory: ${{ matrix.chart.id }}
+    - name: helm template
+      run: |
+        helm template --values values.ci.yaml --output-dir output --debug test .
+      shell: bash
+      working-directory: ${{ matrix.chart.id }}
+    - name: cat output/*.yaml
+      run: |
+        for file in $(find ./output -type f -iname '*.y*ml'); do
+          cat $file
+        done
+      shell: bash
+      working-directory: ${{ matrix.chart.id }}
