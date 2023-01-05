@@ -1,0 +1,32 @@
+{{- range $application := .Values.applications -}}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ $application.metadata.name }}
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ required ".Values.project.metadata.name is required" .Values.project.metadata.name }}
+
+  destination:
+    namespace: {{ $application.metadata.namespace }}
+    server: {{ $application.metadata.destination }}
+
+  source:
+    repoURL: {{ $application.source.repoURL }}
+    targetRevision: {{ $application.source.targetRevision }}
+    path: {{ $application.source.path }}
+
+    {{ if $application.source.helm }}
+    helm:
+      releaseName: {{ $application.source.helm.releaseName }}
+      valueFiles:
+      {{- range $i, $values := $application.source.helm.values }}
+        - {{ $values }}
+      {{- end }}
+    {{ end }}
+
+  syncPolicy:
+  {{ $application.syncPolicy | toYaml | nindent 4 }}
+{{- end -}}

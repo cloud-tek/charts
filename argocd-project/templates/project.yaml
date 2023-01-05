@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: {{ required ".Values.project.metadata.name is required" .Values.project.metadata.name }}
+  namespace: argocd
+  finalizers:
+  {{- required ".Values.project.metadata.finalizers is required" .Values.project.metadata.finalizers | toYaml | nindent 2 }}
+spec:
+  description: {{ required ".Values.project.description is required" .Values.project.description }}
+  sourceRepos:
+  {{- required ".Values.project.sourceRepos is required" .Values.project.sourceRepos | toYaml | nindent 2 }}
+  destinations:
+  {{- required ".Values.project.destinations is required" .Values.project.destinations | toYaml | nindent 2 }}
+  clusterResourceWhitelist:
+  {{- required ".Values.project.clusterResourceWhitelist is required" .Values.project.clusterResourceWhitelist | toYaml | nindent 2 }}
+  namespaceResourceBlacklist:
+  {{- required ".Values.project.namespaceResourceBlacklist is required" .Values.project.namespaceResourceBlacklist | toYaml | nindent 2 }}
+  namespaceResourceWhitelist:
+  {{- required ".Values.project.namespaceResourceWhitelist is required" .Values.project.namespaceResourceWhitelist | toYaml | nindent 2 }}
+
+  roles:
+  {{- required ".Values.project.roles is required" .Values.project.roles | toYaml | nindent 2 }}
