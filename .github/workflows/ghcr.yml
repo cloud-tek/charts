@@ -41,7 +41,7 @@ jobs:
       shell: bash
       working-directory: ${{ github.workspace}}/${{ matrix.chart.id }}
       run: |
-        helm package --destination ./output
+        helm package --destination ./output .
     - name: helm push
       shell: bash
       working-directory: ${{ github.workspace}}/${{ matrix.chart.id }}
