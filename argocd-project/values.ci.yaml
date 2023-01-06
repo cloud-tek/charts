@@ -79,7 +79,6 @@ project:
 applications:
   service:
     metadata:
-      name: my-service
       namespace: default
       destination: https://kubernetes.default.svc
     source:
@@ -87,19 +86,19 @@ applications:
       repoURL: git@github.com:cloud-tek/repository.git
       targetRevision: HEAD
 
-  syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
-      allowEmpty: false
-    syncOptions:
-    - Validate=true
-    - CreateNamespace=true
-    - PrunePropagationPolicy=foreground
-    - PruneLast=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m
+    syncPolicy:
+      automated:
+        prune: false
+        selfHeal: false
+        allowEmpty: false
+      syncOptions:
+      - Validate=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      retry:
+        limit: 5
+        backoff:
+          duration: 5s
+          factor: 2
+          maxDuration: 3m

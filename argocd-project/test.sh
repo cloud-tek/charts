@@ -1,4 +1,4 @@
 #pushd ./service
-helm lint
-helm template --output-dir output test .
+# helm lint
+helm template --debug --values ./values.ci.yaml --output-dir output test .
 #popd

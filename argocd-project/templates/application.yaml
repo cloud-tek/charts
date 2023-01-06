@@ -21,7 +21,7 @@ spec:
 
     {{ if $application.source.helm }}
     helm:
-      releaseName: {{ $application.source.helm.releaseName }}
+      releaseName: {{ $name }}
       valueFiles:
       {{- range $i, $values := $application.source.helm.values }}
         - {{ $values }}

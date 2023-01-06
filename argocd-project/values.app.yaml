@@ -1,13 +1,16 @@
 applications:
   service:
     metadata:
-      name: my-service
       namespace: default
       destination: https://kubernetes.default.svc
     source:
       path: /
       repoURL: git@github.com:cloud-tek/repository.git
       targetRevision: HEAD
+
+      helm:
+        values:
+        - values.yaml
 
   syncPolicy:
     automated:
