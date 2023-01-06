@@ -53,7 +53,7 @@ jobs:
       run: |
         for file in $(find ./output -type f -iname '*.tgz'); do
           echo "Pushing $file ==> oci://ghcr.io/cloud-tek ..."
-          helm push $file oci://ghcr.io/cloud-tek
+          helm push $file oci://ghcr.io/cloud-tek/charts
         done
 
     # - name: helm lint
