@@ -70,6 +70,10 @@ jobs:
 
   ghcr:
     uses: ./.github/workflows/ghcr.yml
+    needs:
+    - helm
+    - kubeconform
+    - opa
     with:
       version: v3.10.3
       platform: linux-amd64
