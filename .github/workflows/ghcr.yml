@@ -37,16 +37,20 @@ jobs:
         && tar -xvzf helm-${{ inputs.version }}-${{ inputs.platform }}.tar.gz \
         && mv ./${{ inputs.platform }}/helm /usr/local/bin
       shell: bash
+    - name: helm registry login
+      shell: bash
+      working-directory: ${{ github.workspace }}/${{ matrix.chart.id }}
+      run: |
+        helm registry login -u cloud-tek ghcr.io --password ${{ secrets.GHCR_Token }}
     - name: helm package
       shell: bash
-      working-directory: ${{ github.workspace}}/${{ matrix.chart.id }}
+      working-directory: ${{ github.workspace }}/${{ matrix.chart.id }}
       run: |
         helm package --destination ./output .
     - name: helm push
       shell: bash
-      working-directory: ${{ github.workspace}}/${{ matrix.chart.id }}
+      working-directory: ${{ github.workspace }}/${{ matrix.chart.id }}
       run: |
-        helm registry login -u cloud-tek ghcr.io --password ${{ secrets.GHCR_Token }}
         for file in $(find ./output -type f -iname '*.tgz'); do
           echo "Pushing $file ==> oci://ghcr.io/cloud-tek ..."
           helm push $file oci://ghcr.io/cloud-tek
