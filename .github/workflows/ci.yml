@@ -67,3 +67,20 @@ jobs:
             "id": "service"
           }
         ]
+
+  ghcr:
+    uses: ./.github/workflows/ghcr.yml
+    with:
+      version: v3.10.3
+      platform: linux-amd64
+      charts: |
+        [
+          {
+            "id": "service"
+          },
+          {
+            "id": "argocd-project"
+          }
+        ]
+    secrets:
+      GHCR_Token: ${{ secret.GHCR-Token }}
