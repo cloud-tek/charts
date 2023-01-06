@@ -87,4 +87,4 @@ jobs:
           }
         ]
     secrets:
-      GHCR_Token: ${{ secrets.GHCR-Token }}
+      GHCR_Token: ${{ secrets.GHCR_Token }}
