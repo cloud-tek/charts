@@ -3,5 +3,5 @@ name: microservice
 description: A HELM chart containing a cloud-tek/hive microservice
 type: application
 icon: https://avatars.githubusercontent.com/u/35167581?s=400&u=ca5fdf8da213a9ab3edd83813b5f3491dea70f6c&v=4
-version: 0.1.0
+version: 0.1.1
 appVersion: 0.1.0
