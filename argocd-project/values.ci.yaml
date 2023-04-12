@@ -1,3 +1,7 @@
+global:
+  region: northeurope
+  environment: dev
+
 project:
   metadata:
     name: my-project

@@ -1,34 +1,53 @@
-{{- if .Values.applications -}}
-{{- range $name, $application := .Values.applications -}}
+{{- range $app := .Values.apps }}
+# Section {{ $app.name }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ $name }}
+  name: {{ required "$app.name is required" $app.name }}
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
-  project: {{ required ".Values.project.metadata.name is required" $.Values.project.metadata.name }}
+  project: {{ required ".Values.project.metadata.name is required" $.Values.project }}
 
   destination:
-    namespace: {{ $application.metadata.namespace }}
-    server: {{ $application.metadata.destination }}
+    namespace: {{ required "$app.namespace is required" $app.namespace }}
+    server: {{ required ".Values.spec.destination.server is required" $.Values.spec.destination.server }}
 
   source:
-    repoURL: {{ $application.source.repoURL }}
-    targetRevision: {{ $application.source.targetRevision }}
-    path: {{ $application.source.path }}
-
-    {{ if $application.source.helm }}
+    repoURL: {{ required ".Values.spec.source.repoURL is required" $.Values.spec.source.repoURL }}
+    targetRevision: {{ required ".Values.spec.source.targetRevision is required" $.Values.spec.source.targetRevision }}
+    {{- if $app.releaseName }}
+    path: {{ printf "%s/%s/%s" (required "$app.repository.path" $app.repository.path) (required ".Values.global.region" $.Values.global.region) (required ".Values.global.environment" $.Values.global.environment) }}
     helm:
-      releaseName: {{ $name }}
+      releaseName: {{ $app.releaseName }}
       valueFiles:
-      {{- range $i, $values := $application.source.helm.values }}
-        - {{ $values }}
+      {{- range $i, $values := $app.repository.values }}
+      - {{ $values }}
       {{- end }}
-    {{ end }}
+      {{- if ((($app).repository).files) }}
+      fileParameters:
+{{- $app.repository.files | toYaml | nindent 6 }}
+      {{- end }}
+    {{- else }}
+    path: {{ required "$app.repository.path is required" $app.repository.path }}
+    {{- end }}
 
   syncPolicy:
-  {{ $application.syncPolicy | toYaml | nindent 4 }}
-{{- end -}}
-{{- end -}}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - Validate=true
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+---
+{{- end }}
