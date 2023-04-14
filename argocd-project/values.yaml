@@ -74,10 +74,12 @@ project:
 
 apps: []
 # - name: static k8s manifests app
+#   destination: https://kubernetes.default.svc # (optional)
 #   namespace: default
 #   repository:
 #     path: <path-in-repo>
 # - name: helm app
+#   destination: https://kubernetes.default.svc # (optional)
 #   namespace: default
 #   version: <chart version>
 #   releaseName: <release name>

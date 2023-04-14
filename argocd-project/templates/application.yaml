@@ -12,7 +12,7 @@ spec:
 
   destination:
     namespace: {{ required "$app.namespace is required" $app.namespace }}
-    server: {{ required ".Values.spec.destination.server is required" $.Values.spec.destination.server }}
+    server: {{ $app.destination | default "https://kubernetes.default.svc" | quote }}
 
   source:
     repoURL: {{ required ".Values.spec.source.repoURL is required" $.Values.spec.source.repoURL }}

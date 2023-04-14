@@ -24,8 +24,8 @@ global:
 |     + Chart.yaml
 |     L values.yaml
 L <app2-path-in-repo>
-| L <global.region>
-|   L <global.environment1>
+  L <global.region>
+    L <global.environment1>
       L manifests.yaml
 ```
 
