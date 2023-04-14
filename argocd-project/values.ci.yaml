@@ -2,6 +2,10 @@ global:
   region: northeurope
   environment: dev
 
+repository:
+  url: "git@github.com:cloud-tek/charts.git"
+  revision: "HEAD"
+
 project:
   metadata:
     name: my-project

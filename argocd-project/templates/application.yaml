@@ -15,8 +15,8 @@ spec:
     server: {{ $app.destination | default "https://kubernetes.default.svc" | quote }}
 
   source:
-    repoURL: {{ required ".Values.spec.source.repoURL is required" $.Values.spec.source.repoURL }}
-    targetRevision: {{ required ".Values.spec.source.targetRevision is required" $.Values.spec.source.targetRevision }}
+    repoURL: {{ required ".Values.repository.url is required" $.Values.repository.url }}
+    targetRevision: {{ required ".Values.repository.revision is required" $.Values.repository.revision }}
     {{- if $app.releaseName }}
     path: {{ printf "%s/%s/%s" (required "$app.repository.path" $app.repository.path) (required ".Values.global.region" $.Values.global.region) (required ".Values.global.environment" $.Values.global.environment) }}
     helm:
