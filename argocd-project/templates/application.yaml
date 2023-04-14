@@ -8,7 +8,7 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
-  project: {{ required ".Values.project.metadata.name is required" $.Values.project }}
+  project: {{ required ".Values.project.metadata.name is required" $.Values.project.metadata.name }}
 
   destination:
     namespace: {{ required "$app.namespace is required" $app.namespace }}
