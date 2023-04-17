@@ -1,3 +1,11 @@
+global:
+  region: northeurope
+  environment: dev
+
+repository:
+  url: "git@github.com:cloud-tek/charts.git"
+  revision: "HEAD"
+
 project:
   metadata:
     name: my-project
@@ -76,29 +84,25 @@ project:
   #   jwtTokens:
   #   - iat: 1535390316
 
-applications:
-  service:
-    metadata:
-      namespace: default
-      destination: https://kubernetes.default.svc
-    source:
-      path: /
-      repoURL: git@github.com:cloud-tek/repository.git
-      targetRevision: HEAD
-
-    syncPolicy:
-      automated:
-        prune: false
-        selfHeal: false
-        allowEmpty: false
-      syncOptions:
-      - Validate=true
-      - CreateNamespace=true
-      - PrunePropagationPolicy=foreground
-      - PruneLast=true
-      retry:
-        limit: 5
-        backoff:
-          duration: 5s
-          factor: 2
-          maxDuration: 3m
+apps:
+- name: oms
+  namespace: kube-system
+  repository:
+    path: k8s/oms
+  # https://github.com/cert-manager/cert-manager/issues/4114#issuecomment-1008162907
+- name: cert-manager
+  namespace: cert-manager
+  version: 1.8.2
+  releaseName: internal
+  repository:
+    path: k8s/cert-manager
+    values:
+    - values.yaml
+- name: descheduler
+  namespace: cert-manager
+  version: 0.20.0
+  releaseName: internal
+  repository:
+    path: k8s/descheduler
+    values:
+    - values.yaml
