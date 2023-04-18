@@ -12,6 +12,14 @@ project:
     # Finalizer that ensures that project is not deleted until it is not referenced by any application
     finalizers:
     - resources-finalizer.argocd.argoproj.io
+    namespace:
+      labels:
+        any: label
+        you: like
+      annotations:
+        the: same
+        applies: for
+        annotations: on-the-namespace
   description: A cloud-tek/hive project
   # Only allow manifests to deploy from the following git repos
   sourceRepos:

@@ -34,6 +34,17 @@ spec:
     {{- end }}
 
   syncPolicy:
+    {{- if or (((($.Values.project).metadata).namespace).annotations) (((($.Values.project).metadata).namespace).labels) }}
+    managedNamespaceMetadata:
+    {{- if (((($.Values.project).metadata).namespace).labels) }}
+      labels:
+      {{- $.Values.project.metadata.namespace.labels | toYaml | nindent 8 }}
+    {{- end }}
+    {{- if (((($.Values.project).metadata).namespace).annotations) }}
+      annotations:
+      {{- $.Values.project.metadata.namespace.annotations | toYaml | nindent 8 }}
+    {{ end }}
+    {{- end }}
     automated:
       prune: true
       selfHeal: true
@@ -49,8 +60,5 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
-    managedNamespaceMetadata:
-      annotations:
-        argocd.argoproj.io/sync-options: "Prune=false"
 ---
 {{- end }}
