@@ -43,6 +43,9 @@ jobs:
           },
           {
             "id": "argocd-project"
+          },
+          {
+            "id": "argocd-vault-provider"
           }
         ]
   kubeconform:
@@ -54,6 +57,9 @@ jobs:
         [
           {
             "id": "service"
+          },
+          {
+            "id": "argocd-vault-provider"
           }
         ]
   opa:
@@ -84,6 +90,9 @@ jobs:
           },
           {
             "id": "argocd-project"
+          },
+          {
+            "id": "argocd-vault-provider"
           }
         ]
     secrets:

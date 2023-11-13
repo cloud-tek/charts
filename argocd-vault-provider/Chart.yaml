@@ -1,0 +1,7 @@
+apiVersion: v2
+name: argocd-project
+description: HELM chart containig a seed secret for an ArgoCD Vault Provider
+type: application
+icon: https://avatars.githubusercontent.com/u/35167581?s=400&u=ca5fdf8da213a9ab3edd83813b5f3491dea70f6c&v=4
+version: 0.1.0
+appVersion: 0.1.0
