@@ -1,0 +1,8 @@
+argocd:
+  vaultProvider:
+    type: 1passwordconnect
+
+onepassword:
+  connect:
+    host: "https://onepassword.dev.cloud-tek.io"
+    token: "123123123"

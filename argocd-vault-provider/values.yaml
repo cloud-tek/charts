@@ -1,0 +1,8 @@
+argocd:
+  vaultProvider:
+    type: 1passwordconnect
+
+onepassword:
+  connect:
+    host: <host>
+    token: <token>
