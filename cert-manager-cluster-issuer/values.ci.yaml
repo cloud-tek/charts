@@ -23,4 +23,4 @@ certificate:
 
 cloudflare:
   email: admin@cloud-tek.io
-  token: "123123123"
+  token: "op://io.cloud-tek.dev/cloudflare/token"

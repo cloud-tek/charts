@@ -13,7 +13,7 @@ on:
     - ".github/workflows/**"
     - "opa/**"
     - "service/**"
-    - "argocd-project/**"
+    - "argo-project/**"
     - "README.md"
   pull_request:
     types:
@@ -24,7 +24,7 @@ on:
     - ".github/workflows/**"
     - "opa/**"
     - "service/**"
-    - "argocd-project/**"
+    - "argo-project/**"
     - "README.md"
 
   workflow_dispatch:
@@ -42,10 +42,10 @@ jobs:
             "id": "service"
           },
           {
-            "id": "argocd-project"
+            "id": "argo-project"
           },
           {
-            "id": "argocd-vault-provider"
+            "id": "argo-vault-provider"
           },
           {
             "id": "cert-manager-cluster-issuer"
@@ -62,7 +62,7 @@ jobs:
             "id": "service"
           },
           {
-            "id": "argocd-vault-provider"
+            "id": "argo-vault-provider"
           },
           {
             "id": "cert-manager-cluster-issuer"
@@ -95,10 +95,10 @@ jobs:
             "id": "service"
           },
           {
-            "id": "argocd-project"
+            "id": "argo-project"
           },
           {
-            "id": "argocd-vault-provider"
+            "id": "argo-vault-provider"
           },
           {
             "id": "cert-manager-cluster-issuer"
