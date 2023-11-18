@@ -46,7 +46,10 @@ jobs:
           },
           {
             "id": "argocd-vault-provider"
-          }
+          },
+          {
+            "id": "cert-manager-cluster-issuer"
+          },
         ]
   kubeconform:
     uses: ./.github/workflows/kubeconform.yml
@@ -60,7 +63,10 @@ jobs:
           },
           {
             "id": "argocd-vault-provider"
-          }
+          },
+          {
+            "id": "cert-manager-cluster-issuer"
+          },
         ]
   opa:
     uses: ./.github/workflows/opa.yml
@@ -93,7 +99,10 @@ jobs:
           },
           {
             "id": "argocd-vault-provider"
-          }
+          },
+          {
+            "id": "cert-manager-cluster-issuer"
+          },
         ]
     secrets:
       GHCR_Token: ${{ secrets.GHCR_Token }}

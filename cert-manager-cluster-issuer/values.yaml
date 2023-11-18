@@ -1,0 +1,26 @@
+certificate:
+  # REQUIRED
+  # name: <name>
+  duration: 2160h
+  renewBefore: 360h
+  # REQUIRED
+  # issuerRef:
+  #   name: <issuer-name>
+  #   kind: ClusterIssuer
+  # REQUIRED
+  # dnsNames:
+  # - "<domain>"
+  # - "*.<domain>"
+  # REQUIRED
+  # commonName: "<common-name>"
+  # subject:
+  #   organizations:
+  #   - <organization>
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+
+cloudflare: {}
+  # REQUIRED
+  # email: <email>

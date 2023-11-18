@@ -1,0 +1,26 @@
+certificate:
+  # REQUIRED
+  name: dev.cloud-tek.io
+  duration: 2160h
+  renewBefore: 360h
+  # REQUIRED
+  issuerRef:
+    name: dev.cloud-tek.io.cluster-issuer
+    kind: ClusterIssuer
+  # REQUIRED
+  dnsNames:
+  - "dev.cloud-tek.io"
+  - "*.dev.cloud-tek.io"
+  # REQUIRED
+  commonName: "dev.cloud-tek.io"
+  subject:
+    organizations:
+    - dev.cloud-tek.io
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+
+cloudflare:
+  email: admin@cloud-tek.io
+  token: "123123123"
