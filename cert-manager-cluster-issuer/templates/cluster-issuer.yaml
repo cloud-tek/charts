@@ -2,17 +2,17 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: {{ required ".Values.certificate.name is required" .Values.certificate.name | quote }}
+  name: {{ .Release.Name }}
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: {{ printf "%s.cluster-issuer-key" .Values.certificate.name }}
+      name: {{ printf "%s.cluster-issuer-key" .Release.Name }}
     solvers:
     - dns01:
         cloudflare:
           email: {{ required ".Values.cloudflare.email is required" .Values.cloudflare.email | quote }}
           apiTokenSecretRef:
-            name: {{ printf "%s.cloudflare-token" .Values.certificate.name }}
+            name: {{ printf "%s.cloudflare-token" .Release.Name }}
             key: token
 {{- end -}}

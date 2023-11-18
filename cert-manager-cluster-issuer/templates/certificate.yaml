@@ -1,11 +1,11 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ required ".Values.certificate.name is required" .Values.certificate.name | quote }}
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
   # Secret names are always required.
-  secretName: {{ required ".Values.certificate.name is required" .Values.certificate.name | quote }}
+  secretName: {{ .Release.Name }}
 spec:
 
   # secretTemplate is optional. If set, these annotations and labels will be

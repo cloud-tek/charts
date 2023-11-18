@@ -1,6 +1,5 @@
 certificate:
   # REQUIRED
-  name: dev.cloud-tek.io
   duration: 2160h
   renewBefore: 360h
   # REQUIRED
