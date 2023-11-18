@@ -1,0 +1,45 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ required ".Values.certificate.name is required" .Values.certificate.name | quote }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  # Secret names are always required.
+  secretName: {{ required ".Values.certificate.name is required" .Values.certificate.name | quote }}
+spec:
+
+  # secretTemplate is optional. If set, these annotations and labels will be
+  # copied to the Secret named example-com-tls. These labels and annotations will
+  # be re-reconciled if the Certificate's secretTemplate changes. secretTemplate
+  # is also enforced, so relevant label and annotation changes on the Secret by a
+  # third party will be overwriten by cert-manager to match the secretTemplate.
+  # secretTemplate:
+  #   annotations:
+  #     my-secret-annotation-1: "foo"
+  #     my-secret-annotation-2: "bar"
+  #   labels:
+  #     my-secret-label: foo
+
+  commonName: {{ required ".Values.certificate.commonName is required" .Values.certificate.commonName | quote }}
+  subject:
+  {{- required ".Values.certificate.subject is required" .Values.certificate.subject | toYaml | nindent 4 }}
+  # The use of the common name field has been deprecated since 2000 and is
+  # discouraged from being used.
+  isCA: false
+  duration: {{ required ".Values.certificate.duration is required" .Values.certificate.duration | quote }}
+  renewBefore: {{ required ".Values.certificate.renewBefore is required" .Values.certificate.renewBefore | quote }}
+  privateKey:
+  {{- required ".Values.certificate.privateKey is required" .Values.certificate.privateKey | toYaml | nindent 4 }}
+  usages:
+  - server auth
+  - client auth
+  # At least one of a DNS Name, URI, or IP address is required.
+  dnsNames:
+  {{- required ".Values.certificate.dnsNames is required" .Values.certificate.dnsNames | toYaml | nindent 2 }}
+  # uris:
+  #   - spiffe://cluster.local/ns/sandbox/sa/example
+  # ipAddresses:
+  #   - 192.168.0.5
+  # Issuer references are always required.
+  issuerRef:
+  {{- required ".Values.certificate.issuerRef is required" .Values.certificate.issuerRef | toYaml | nindent 4 }}
