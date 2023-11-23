@@ -6,8 +6,6 @@ metadata:
 spec:
   # Secret names are always required.
   secretName: {{ .Release.Name }}
-spec:
-
   # secretTemplate is optional. If set, these annotations and labels will be
   # copied to the Secret named example-com-tls. These labels and annotations will
   # be re-reconciled if the Certificate's secretTemplate changes. secretTemplate
