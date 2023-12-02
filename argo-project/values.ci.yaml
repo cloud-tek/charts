@@ -106,6 +106,12 @@ apps:
     path: k8s/cert-manager
     values:
     - values.yaml
+  ignoreDifferences:
+  - group: admissionregistration.k8s.io
+    kind: MutatingWebhookConfiguration
+    jqPathExpressions:
+    - .webhooks[0].namespaceSelector.matchExpressions[] | select(.key == "control-plane")
+    - .webhooks[0].namespaceSelector.matchExpressions[] | select(.key == "kubernetes.azure.com/managedBy")
 - name: descheduler
   namespace: cert-manager
   version: 0.20.0
